@@ -1,0 +1,13 @@
+---
+- name: Reload nginx
+  ansible.builtin.service:
+    name: nginx
+    state: reloaded
+
+- name: Restart peertube.service
+  ansible.builtin.service:
+    name: peertube
+    state: restarted
+
+- name: Apply sysctl tuning # noqa: no-changed-when
+  ansible.builtin.command: "/usr/sbin/sysctl -p /etc/sysctl.d/30-peertube-tcp.conf"

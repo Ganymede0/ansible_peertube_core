@@ -1,0 +1,25 @@
+---
+- name: Setup nginx for peertube
+  ansible.builtin.template:
+    src: nginx-peertube.j2
+    dest: /etc/nginx/sites-available/peertube
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify: Reload nginx
+
+- name: Enable peertube config for nginx (symlink)
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/peertube
+    dest: /etc/nginx/sites-enabled/peertube
+    state: link
+    owner: "root"
+    group: "root"
+    force: true
+  notify: Reload nginx
+
+- name: Ensure nginx is started and enabled
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true

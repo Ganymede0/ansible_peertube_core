@@ -1,0 +1,103 @@
+---
+# These tasks are executed only if the right version of Peertube
+# is not already installed
+
+- name: Ensure gnupg and unzip are present
+  ansible.builtin.apt:
+    name:
+      - gnupg
+      - unzip
+    state: present
+
+# Since ansible cannot yet automatically verify the OpenPGP signature
+# of a file, this must be done by hand:
+# https://github.com/ansible/ansible/issues/69364
+
+- name: Check OpenPGP key presence
+  ansible.builtin.command: "/usr/bin/gpg ‐‐list‐keys {{ peertube_key_fingerprint }}"
+  ignore_errors: true
+  become: true
+  become_user: peertube
+  vars:
+    ansible_ssh_pipelining: true
+  register: openpgp_key_presence
+  changed_when: false
+
+- name: Import peertube signing key
+  ansible.builtin.command: "/usr/bin/gpg --keyserver keyserver.ubuntu.com --recv-keys {{ peertube_key_fingerprint }}"
+  become: true
+  become_user: peertube
+  vars:
+    ansible_ssh_pipelining: true
+  when: not openpgp_key_presence.rc == 0
+  changed_when: false
+
+- name: Download peertube archive # noqa: no-changed-when
+  ansible.builtin.get_url:
+    url: "{{ peertube_zip_url }}"
+    dest: /var/www/peertube/versions
+    owner: peertube
+    group: peertube
+    mode: "0644"
+
+- name: Download peertube archive signature # noqa: no-changed-when
+  ansible.builtin.get_url:
+    url: "{{ peertube_zip_url }}.asc"
+    dest: /var/www/peertube/versions
+    owner: peertube
+    group: peertube
+    mode: "0644"
+
+- name: Verify peertube archive signature # noqa: no-changed-when
+  ansible.builtin.command: "/usr/bin/gpg --trusted-key {{ peertube_key_fingerprint }} --verify {{ peertube_archive }}.asc"
+  args:
+    chdir: /var/www/peertube/versions
+  become: true
+  become_user: peertube
+  vars:
+    ansible_ssh_pipelining: true
+
+- name: Unzip peertube archive
+  ansible.builtin.unarchive:
+    src: "/var/www/peertube/versions/{{ peertube_archive }}"
+    remote_src: true
+    dest: /var/www/peertube/versions
+    owner: peertube
+    group: peertube
+    mode: "0755"
+
+- name: Remove peertube archive
+  ansible.builtin.file:
+    path: "/var/www/peertube/versions/{{ peertube_archive }}"
+    state: absent
+
+- name: Remove peertube archive signature
+  ansible.builtin.file:
+    path: "/var/www/peertube/versions/{{ peertube_archive }}.asc"
+    state: absent
+
+- name: Symlink peertube-latest
+  ansible.builtin.file:
+    src: "/var/www/peertube/versions/peertube-{{ peertube_version }}"
+    dest: "/var/www/peertube/peertube-latest"
+    owner: peertube
+    group: peertube
+    state: link
+
+- name: Fix directory ownership (bug ?)
+  ansible.builtin.file:
+    path: "/var/www/peertube/versions/peertube-{{ peertube_version }}/client"
+    owner: peertube
+    group: peertube
+    mode: "0755"
+    state: directory
+    recurse: true
+
+- name: Launch peertube install with yarn (please be patient) # noqa: no-changed-when
+  ansible.builtin.command: "yarn install --production --pure-lockfile"
+  args:
+    chdir: /var/www/peertube/peertube-latest
+  become: true
+  become_user: peertube
+  vars:
+    ansible_ssh_pipelining: true

@@ -1,0 +1,47 @@
+---
+# A trick is necessary to configure postgresql in ansible:
+# https://github.com/ansible/ansible/issues/16048#issuecomment-229012509
+
+- name: Ensure ansible postgresql dependencies
+  ansible.builtin.apt:
+    name:
+      - libpq-dev
+      - python3-psycopg2
+
+- name: Create peertube user in postgresql
+  community.postgresql.postgresql_user:
+    name: peertube
+    password: "{{ peertube_postgresql_user_passwd }}"
+  become: true
+  become_user: postgres
+  vars:
+    ansible_ssh_pipelining: true
+
+- name: Create peertube_prod db in postgresql
+  community.postgresql.postgresql_db:
+    name: peertube_prod
+    owner: peertube
+    encoding: UTF-8
+    template: template0
+  become: true
+  become_user: postgres
+  vars:
+    ansible_ssh_pipelining: true
+
+- name: Add pg_trgm extension to postgresql db
+  community.postgresql.postgresql_ext:
+    name: pg_trgm
+    db: peertube_prod
+  become: true
+  become_user: postgres
+  vars:
+    ansible_ssh_pipelining: true
+
+- name: Add unaccent extension to postgresql db
+  community.postgresql.postgresql_ext:
+    name: unaccent
+    db: peertube_prod
+  become: true
+  become_user: postgres
+  vars:
+    ansible_ssh_pipelining: true

@@ -1,0 +1,111 @@
+---
+- name: Ensure required packages are present
+  ansible.builtin.apt:
+    name:
+      - python3-dev
+      - python-is-python3
+      - curl
+      - ffmpeg
+      - openssl
+      - g++
+      - make
+      - git
+      - cron
+    state: present
+
+- name: Ensure peertube user
+  ansible.builtin.user:
+    name: peertube
+    shell: /bin/bash
+    home: /var/www/peertube
+    create_home: true
+    password: "{{ peertube_user_password }}"
+
+- name: Ensure peertube directory
+  ansible.builtin.file:
+    path: /var/www/peertube
+    owner: peertube
+    group: peertube
+    mode: "0755"
+    state: directory
+
+- name: Configure postgresql for peertube
+  ansible.builtin.include_tasks: postgresql.yml
+
+- name: Ensure peertube config directory
+  ansible.builtin.file:
+    path: /var/www/peertube/config
+    owner: peertube
+    group: peertube
+    mode: "0750"
+    state: directory
+
+- name: Ensure peertube versions directory
+  ansible.builtin.file:
+    path: /var/www/peertube/versions
+    owner: peertube
+    group: peertube
+    mode: "0755"
+    state: directory
+
+# Check that the right version of Peertube is installed by checking
+# that the 'peertube-latest' symlink points to the corresponding directory
+
+- name: Stat peertube symlink
+  ansible.builtin.stat:
+    path: /var/www/peertube/peertube-latest
+  register: symlink
+
+- name: Stat peertube version
+  ansible.builtin.stat:
+    path: "/var/www/peertube/versions/peertube-{{ peertube_version }}"
+  register: version
+
+- name: Install peertube
+  ansible.builtin.include_tasks: peertube-install.yml
+  when: not ( symlink.stat.islnk is defined and symlink.stat.islnk and version.stat.isdir is defined and version.stat.isdir and symlink.stat.lnk_source == version.stat.path ) # noqa yaml[line-length]
+
+- name: Copy peertube default configuration
+  ansible.builtin.copy:
+    src: default.yaml
+    dest: /var/www/peertube/config/
+    owner: peertube
+    group: peertube
+    mode: "0640"
+  notify: Restart peertube.service
+
+- name: Peertube production configuration
+  ansible.builtin.template:
+    src: production.yaml.j2
+    dest: /var/www/peertube/config/production.yaml
+    owner: peertube
+    group: peertube
+    mode: "0640"
+  notify: Restart peertube.service
+
+- name: Copy peertube systemd service file
+  ansible.builtin.copy:
+    src: peertube.service
+    dest: /etc/systemd/system/
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Ensure peertube is started and enabled
+  ansible.builtin.service:
+    name: peertube
+    state: started
+    enabled: true
+
+- name: Configure nginx for peertube
+  ansible.builtin.include_tasks:
+    file: nginx.yml
+
+- name: Linux TCP/IP tuning
+  ansible.builtin.copy:
+    src: 30-peertube-tcp.conf
+    dest: /etc/sysctl.d/
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify: Apply sysctl tuning

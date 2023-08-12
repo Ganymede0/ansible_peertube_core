@@ -1,0 +1,10 @@
+---
+# Peertube version this role will install
+peertube_version: "v5.2.0"
+
+# Fingerprint of the OpenPGP key used to verify Peertube zip archive
+peertube_key_fingerprint: "C44AAD638367912CA93EDD57583A612D890159BE"
+
+# Name and URL of the zip archive
+peertube_archive: "peertube-{{ peertube_version }}.zip"
+peertube_zip_url: "https://github.com/Chocobozzz/PeerTube/releases/download/{{ peertube_version }}/{{ peertube_archive }}"

@@ -1,0 +1,73 @@
+---
+# IP on which PeerTube listens
+peertube_listen_hostname: "127.0.0.1"
+
+# Port on which PeerTube listens
+peertube_listen_port: 9000
+
+# Postgresql settings
+peertube_postgresql_hostname: "localhost"
+peertube_postgresql_port: 5432
+peertube_postgresql_ssl: false
+peertube_postgresql_suffix: "_prod"
+peertube_postgresql_username: "peertube"
+peertube_postgresql_pool_max: 5
+
+# Redis settings
+peertube_redis_hostname: "localhost"
+peertube_redis_port: 6379
+
+# SMTP settings
+peertube_smtp_transport: "smtp"
+peertube_smtp_sendmail: "null"
+peertube_smtp_hostname: "null"
+peertube_smtp_port: 465
+peertube_smtp_username: "null"
+peertube_smtp_password: "null"
+peertube_smtp_tls: true
+peertube_smtp_disable_starttls: false
+peertube_smtp_ca_file: "null"
+peertube_smtp_from_address: "admin@example.com"
+
+# Email settings
+peertube_email_body_signature: "PeerTube"
+peertube_email_subject_prefix: "[PeerTube]"
+
+# PeerTube defaults
+peertube_defaults_publish_download_enabled: true
+peertube_defaults_publish_comments_enabled: true
+peertube_defaults_privacy: 1
+peertube_defaults_licence: "null"
+peertube_defaults_p2p_webapp_enabled: true
+peertube_defaults_p2p_embed_enabled: true
+
+# PeerTube storage
+peertube_storage: "/var/www/peertube/storage"
+
+# Object storage
+peertube_object_storage_enabled: false
+peertube_object_storage_endpoint: ""
+peertube_object_storage_region: "us-east-1"
+peertube_object_storage_upload_acl_public: "public-read"
+peertube_object_storage_upload_acl_private: "private"
+peertube_object_storage_proxy_proxify_private_files: true
+peertube_object_storage_credentials_access_key_id: ""
+peertube_object_storage_credentials_secret_access_key: ""
+peertube_object_storage_max_upload_part: "100MB"
+
+# Logs
+peertube_log_level: "info"
+peertube_log_anonymize_ip: false
+
+# Trending videos
+peertube_trending_videos_interval_days: 7
+peertube_trending_videos_algorithms_default: "most-viewed"
+
+# Remote redundancy
+peertube_remote_redundancy_videos_accept_from: "anybody"
+
+# Videos history
+peertube_history_videos_max_age: "-1"
+
+# Webadmin
+peertube_webadmin_configuration_edition_allowed: true
