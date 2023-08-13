@@ -4,7 +4,7 @@
 
 This role is designed to automate the deployment of [PeerTube](https://joinpeertube.org) instances with [ansible](https://www.ansible.com).
 
-However, **it does not install all the services required by PeerTube**, such as NodeJS, postgresql, redis, nginx and a TLS certificate. There are already a lot of excellent ansible roles to deploy these services, and most ansible users probably use some of them already.
+However, **it does not install all the services required by PeerTube**. There are a lot of excellent ansible roles to deploy these services, and most ansible users probably use some of them already.
 
 Here's what needs to be installed separately:
 
@@ -15,12 +15,17 @@ Here's what needs to be installed separately:
 - Redis
 - A valid TLS certificate
 
-This role installs PeerTube and configures required services, assuming that all dependencies are already correctly installed.
+This role installs PeerTube and configures required services (including Nginx and PostgreSQL), assuming that all dependencies are already correctly installed.
 
 Currently, it works only with **Debian 11 (bullseye)**.
 
 
 # Variables
+
+## Version of PeerTube
+
+The version of PeerTube that this role will install is defined in `vars/main.yml`. It is currently **5.2.0**. This variable is not meant to be edited, since it is the only supported version.
+
 
 ## Mandatory variables
 

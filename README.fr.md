@@ -4,7 +4,7 @@
 
 Ce rôle est conçu pour automatiser le déploiement d'instances [PeerTube](https://joinpeertube.org) avec [ansible](https://www.ansible.com).
 
-Cependant, **il n'installe pas tous les services nécessaires au fonctionnement de PeerTube**. En effet, il existe déjà d'excellents rôles ansible pour déployer ces services, et la plupart des utilisateurs d'ansible en utilisent déjà certainement.
+Cependant, **il n'installe pas tous les services nécessaires au fonctionnement de PeerTube**. En effet, il existe d'excellents rôles ansible pour déployer ces services, et la plupart des utilisateurs d'ansible en utilisent déjà certainement.
 
 Voici ce qu'il faut installer par ailleurs :
 
@@ -15,12 +15,17 @@ Voici ce qu'il faut installer par ailleurs :
 - Redis
 - Un certificat TLS valide
 
-Ce rôle se contente d'installer PeerTube et de configurer les services nécessaires, en considérant que toutes les dépendances sont déjà correctement installées.
+Ce rôle se contente d'installer PeerTube et de configurer les services nécessaires (y-compris Nginx et PostgreSQL), en considérant que toutes les dépendances sont déjà correctement installées.
 
 Pour l'instant, il fonctionne uniquement avec **Debian 11 (bullseye)**.
 
 
 # Variables
+
+## Version de PeerTube
+
+La version de PeerTube installée par ce rôle est définie dans `vars/main.yml`. C'est actuellement la version **5.2.0**. Cette variable n'est pas censée être modifiée, car il s'agit de la seule version supportée.
+
 
 ## Variables à définir obligatoirement
 
