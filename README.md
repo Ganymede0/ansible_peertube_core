@@ -1,4 +1,4 @@
-**[Version française](README.fr.md)**
+**[Version française](https://github.com/Ganymede0/ansible_peertube_core/blob/main/README.fr.md)**
 
 # What this role does and does not do
 
@@ -47,7 +47,7 @@ Only one variable is not related to PeerTube's configuration itself:
 
 - `peertube_import_key` (boolean): set this variable to `false` if you don't want to reimport the OpenPGP key necessary to verify peertube's zip archive each time the role is played. You'll have to set this variable to `true` again if this key is modified in any way (because it has expired or is revoked, because the signature has changed, etc.).
 
-The other variables set PeerTube parameters in `production.yaml`. They are named after this file's YAML structure, prefixed by `peertube_`. Possible values are (for the most part) commented in [templates/production.yaml.j2](templates/production.yaml.j2), and default values can be found in [defaults/main.yml](defaults/main.yml).
+The other variables set PeerTube parameters in `production.yaml`. They are named after this file's YAML structure, prefixed by `peertube_`. Possible values are (for the most part) commented in [templates/production.yaml.j2](https://github.com/Ganymede0/ansible_peertube_core/blob/main/templates/production.yaml.j2), and default values can be found in [defaults/main.yml](https://github.com/Ganymede0/ansible_peertube_core/blob/main/defaults/main.yml).
 
 **This role does not support all PeerTube parameters.** However, available variables should already cover most deployment needs. If you need to expose more variables in this role, feel free to contribute a merge request ;-)
 
@@ -90,4 +90,4 @@ Please note that two sets of variables have to be consistent with how PostgreSQL
 
 # License
 
-This role is distributed under the terms of the [BSD-3-Clause license](LICENSE).
+This role is distributed under the terms of the [BSD-3-Clause license](https://github.com/Ganymede0/ansible_peertube_core/blob/main/LICENSE).
