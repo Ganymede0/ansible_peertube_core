@@ -6,7 +6,7 @@ peertube_listen_hostname: "127.0.0.1"
 peertube_listen_port: 9000
 
 # Postgresql settings
-peertube_postgresql_hostname: "localhost"
+peertube_postgresql_hostname: "127.0.0.1"
 peertube_postgresql_port: 5432
 peertube_postgresql_ssl: false
 peertube_postgresql_suffix: "_prod"
@@ -14,7 +14,7 @@ peertube_postgresql_username: "peertube"
 peertube_postgresql_pool_max: 5
 
 # Redis settings
-peertube_redis_hostname: "localhost"
+peertube_redis_hostname: "127.0.0.1"
 peertube_redis_port: 6379
 
 # SMTP settings
