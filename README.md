@@ -17,9 +17,9 @@ Here's what needs to be installed separately:
 
 This role installs PeerTube and configures required services (including Nginx and PostgreSQL), assuming that all dependencies are already correctly installed.
 
-Currently, it works only with **Debian 11 (bullseye)**. Support for Debian 12 (bookworm) is in the works.
+This role works with Debian 11 (bullseye) and 12 (bookworm).
 
-Also note that this role is designed to **deploy** PeerTube and not to **update** it. If you already installed PeerTube and want to update it, it is advised to follow the official [PeerTube upgrade instructions](https://docs.joinpeertube.org/install/any-os#upgrade) before playing a new version of this role.
+It is designed to **deploy** PeerTube and not to **update** it. If you already installed PeerTube and want to update it, it is advised to follow the official [PeerTube upgrade instructions](https://docs.joinpeertube.org/install/any-os#upgrade) before playing a new version of this role.
 
 
 # Variables
